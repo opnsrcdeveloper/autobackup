@@ -13,4 +13,3 @@ Default time duration of auto back up is 3 days, you can changes this in Control
 
 
 Thanks,
-1wayit Soluitons

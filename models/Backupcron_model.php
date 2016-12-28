@@ -32,6 +32,7 @@ class Backupcron_model extends CI_Model
 			$this->db->select('*');
 			$this->db->from($table);
 			$query = $this->db->get();
+			$rows = array();
 			$rows = $query->result_array();
 			$num_fields =  $this->db->list_fields($table);
 			$num_fields = count($num_fields);
@@ -41,6 +42,7 @@ class Backupcron_model extends CI_Model
 			$return.= "\n\n".$rows2['Create Table'].";\n\n";
 			
 				$row_new = array();
+				$data = array();
 				foreach($rows as $key=>$row)
 				{ 
 					foreach($row as $row_new)
@@ -61,6 +63,7 @@ class Backupcron_model extends CI_Model
 						if ($j<($num_fields-1)) { $return.= ','; }
 					}
 					$return.=");";
+					print_r($return);
 				}
 			$return.="\n\n";
 		}

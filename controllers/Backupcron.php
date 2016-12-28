@@ -9,6 +9,8 @@ class Backupcron extends CI_Controller {
 	}
 		
 	public function index(){
+		$pastdays = "-3 days"; // past days from today to delete backup 
+		
 	$db = $this->backupcron_model->database();
 	$date = date('d-m-y', time()); 
 	$folder = 'DB_Backup/';
@@ -32,7 +34,7 @@ chmod($folder, 0777);
 $date = date('d-m-y', time()); 
 
 $filename = $folder."db-".$db."-".$date; 
-$sdate = date('d-m-y',  strtotime("-3 days") );
+$sdate = date('d-m-y',  strtotime($pastdays) );
 $old_filename = $folder."db-".$db."-".$sdate; 
 
 $handle = fopen($filename.'.sql','w+');
@@ -41,7 +43,8 @@ if($status !== false)
 {
 	echo "Database backup Success, db-".$db."-".$sdate." file is saved to DB_Backup folder in your root directory";
 	if ( file_exists($filename.'.sql') == 1)
-	{
+	{ 
+		if( file_exists($old_filename.'.sql')  == 1)
 		unlink($old_filename.'.sql');
 	}
 }

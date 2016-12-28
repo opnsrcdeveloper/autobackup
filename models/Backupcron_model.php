@@ -29,20 +29,20 @@ class Backupcron_model extends CI_Model
 		
 		foreach($allTables as $table)
 		{
+			$this->db->dbprefix = "";
 			$this->db->select('*');
 			$this->db->from($table);
 			$query = $this->db->get();
 			$rows = array();
 			$rows = $query->result_array();
+
 			$num_fields =  $this->db->list_fields($table);
 			$num_fields = count($num_fields);
 			$return.= 'DROP TABLE IF EXISTS '.$table.';';
 			$query2 = $this->db->query('SHOW CREATE TABLE '.$table);
 			$rows2 = $query2->row_array();
 			$return.= "\n\n".$rows2['Create Table'].";\n\n";
-			
-				$row_new = array();
-				$data = array();
+				$row_new = $data = array();
 				foreach($rows as $key=>$row)
 				{ 
 					foreach($row as $row_new)
@@ -58,12 +58,11 @@ class Backupcron_model extends CI_Model
 					{
 						$row_new2[$j] = addslashes($data['row_new2'][$key][$j]);
 						$row_new2[$j] = str_replace("\n","\\n",$data['row_new2'][$key][$j]);
-						if (isset($row_new2[$j])) { $return.= '"'.$data['row_new2'][$key][$j].'"' ; }
-						else { $return.= '""'; }
+						if (isset($row_new2[$j])) { $return.= "'".str_replace("'","''",$data['row_new2'][$key][$j])."'" ; }
+						else { $return.= "''"; }
 						if ($j<($num_fields-1)) { $return.= ','; }
 					}
 					$return.=");";
-					print_r($return);
 				}
 			$return.="\n\n";
 		}
